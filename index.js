@@ -4,6 +4,11 @@ import { buscarEspecialidades } from './DAO/especialidade/buscar_especialidade.j
 import { buscarAgendamentos } from './DAO/agendamento/buscar_agendamento.js'
 import { buscarMedicos } from './DAO/medico/buscar_medico.js'
 import { buscarConsultas } from './DAO/consulta/buscar_consulta.js'
+import { incluirPaciente } from './DAO/paciente/inserir_paciente.js'
+import { incluirEspecialidade } from './DAO/especialidade/inserir_especialidade.js'
+import { incluirAgendamento } from './DAO/agendamento/inserir_agendamento.js'
+import { incluirMedico } from './DAO/medico/inserir_medico.js'
+import { incluirConsulta } from './DAO/consulta/inserir_consulta.js'
 
 const app = express()
 app.use(express.json())
@@ -12,29 +17,50 @@ app.get('/ola', (req, res) =>{
      res.json({mensagem: 'Ola Mundo'})
 })
 
-app.get('/paciente', async (req, res) =>{
-    let pacientes = await buscarPacientes()
-    res.json(pacientes)
+app.post('/paciente', async (req, res) =>{
+
+    let  { nome, endereco, telefone, doencasPrevias, remedioDeUsoContinuo} = req.body
+    let infos = [ nome, endereco, telefone, doencasPrevias, remedioDeUsoContinuo]
+
+
+    let resp = await incluirPaciente(infos)
+    
+    res.send(resp)
 })
 
-app.get('/especialidade', async (req, res) =>{
-    let especialidades = await buscarEspecialidades()
-    res.json(especialidades)
+app.post('/especialidade', async (req, res) =>{
+
+    let  { nome, publicoAlvo} = req.body
+    let infos = [ nome, publicoAlvo]
+
+
+    let resp = await incluirEspecialidade(infos)
+    
+    res.send(resp)
 })
 
-app.get('/agendamento', async (req, res) =>{
-    let agendamentos = await buscarAgendamentos()
-    res.json(agendamentos)
+app.post('/agendamento', async (req, res) =>{
+    let {data, hora, queixa, gravidade} = req.body
+    let infos = [data, hora, queixa, gravidade]
+
+    let resp = await incluirAgendamento(infos)
+    res.json(resp)
 })
 
-app.get('/medico', async (req, res) =>{
-    let medicos = await buscarMedicos()
-    res.json(medicos)
+app.post('/medico', async (req, res) =>{
+    let {nome, endereco, telefone, crm, numeroRegistro} = req.body
+    let infos = [nome, endereco, telefone, crm, numeroRegistro]
+
+    let resp = await incluirMedico(infos)
+    res.json(resp)
 })
 
-app.get('/consulta', async (req, res) =>{
-    let consultas = await buscarConsultas()
-    res.json(consultas)
+app.post('/consulta', async (req, res) =>{
+    let {data, hora, numeroBeneficiario, crm, numeroAgendamento} = req.body
+    let infos = [numeroBeneficiario, crm, data, hora, numeroAgendamento]
+
+    let resp = await incluirConsulta(infos)
+    res.json(resp)
 })
 
 
